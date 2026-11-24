@@ -56,7 +56,7 @@ namespace GameOfLife
 			}
 
 			// Pick a random orientation, in radians.
-			_cellDraw_Angle = (float)(0); // TODO - replace the 0 with a random number between 0 and 2*PI.
+			_cellDraw_Angle = (float)random.NextSingle() * (2 * float.Pi); // TODO - replace the 0 with a random number between 0 and 2*PI.
 		}
 
 		// The first stage of the simulation.
@@ -127,7 +127,9 @@ namespace GameOfLife
 
 			// Check ↘
 			// If this isn't the rightmost or bottom-most edge, and the cell to the lower-right is alive, count it.
-			if (false) // TODO - based on the previous checks, replace the false with a condition that checks whether there is a lower-left neighbour.
+			if (_cellLocation.X < gridSize.X - 1
+                && _cellLocation.Y < gridSize.Y - 1
+                && cells[_cellLocation.Y + 1][_cellLocation.X + 1]._cellState) // TODO - based on the previous checks, replace the false with a condition that checks whether there is a lower-left neighbour.
 			{
 				neighbourCount++;
 			}
@@ -139,6 +141,10 @@ namespace GameOfLife
 			// You will need to check the current cell state and the number of neighbours found, and use them set the new value of _nextState.
 			// You can base this on the standard rules for Conway's Game of Life, which you will find online.
 			// If this one feels hard, it's probably easier than you think. Your solution should be around 2 to 8 lines.
+			if (_cellState == true && neighbourCount < 2) _nextState = false;
+			else if (_cellState == true && (neighbourCount == 2 || neighbourCount == 3)) _nextState = true;
+			else if (_cellState == true && neighbourCount > 3) _nextState = false;
+			else if (_cellState == false && neighbourCount == 3) _nextState = true;
 		}
 
 		// The second stage of the simulation.

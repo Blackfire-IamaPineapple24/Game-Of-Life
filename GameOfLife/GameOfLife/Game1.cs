@@ -39,8 +39,8 @@ namespace GameOfLife
 		protected override void Initialize()
 		{
 			// Set up the window size and apply it.
-			_graphics.PreferredBackBufferWidth = 100; // TODO - use the screen size variable to set the width
-			_graphics.PreferredBackBufferHeight = 100; // TODO - use the screen size variable to set the height
+			_graphics.PreferredBackBufferWidth = _screenSize.X; // Use the screen size variable to set the width
+			_graphics.PreferredBackBufferHeight = _screenSize.Y; // Use the screen size variable to set the height
 			_graphics.ApplyChanges();
 
 			base.Initialize();
@@ -51,7 +51,7 @@ namespace GameOfLife
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 
 			// Load the images.
-			_cellTxr = Content.Load<Texture2D>("background"); // TODO - get the right filename for the cells sprite-sheet
+			_cellTxr = Content.Load<Texture2D>("cells"); // Get the right filename for the cells sprite-sheet
 			_backTxr = Content.Load<Texture2D>("background");
 
 			// Set up the initial layout of cells.
@@ -81,7 +81,7 @@ namespace GameOfLife
 					// The cell instance is initialised with x and y co-ords from the for loops
 					// and is also given a 1/12 chance of starting out alive.
 					// (If the random number <12 turns out to be 0, then the parameter is true, otherwise false.)
-					_cells[y].Add(new Cell(new Point(x, y), 99 == 0)); // TODO - replace 99 with code to get a random number < 12. There is already a Random instance available.
+					_cells[y].Add(new Cell(new Point(x, y), random.Next(0, 12) == 0)); // Replace 99 with code to get a random number < 12. There is already a Random instance available.
 				}
 			}
 		}
@@ -109,7 +109,7 @@ namespace GameOfLife
 					&& _mouseGrid.Y >= 0 && _mouseGrid.Y < _gridSize.Y)
 				{
 					// ...then toggle the cell under the mouse.
-					_cells[0][0].ClickToggle(); // TODO - replace the 0s in [0][0] with the _mouseGrid coordinates.
+					_cells[_mouseGrid.Y][_mouseGrid.X].ClickToggle(); // Replace the 0s in [0][0] with the _mouseGrid coordinates.
 				}
 			}
 			// If the mouse button has been realised and we haven't reacted yet... 
@@ -134,7 +134,8 @@ namespace GameOfLife
 					// ...then we loop through the cells in each row, on the x axis.
 					foreach (Cell everyCell in everyRow)
 					{
-						// TODO - execute the RandomiseAppearance function on every cell
+						// Execute the RandomiseAppearance function on every cell
+						everyCell.RandomiseAppearance();
 					}
 				}
 			}
@@ -183,7 +184,8 @@ namespace GameOfLife
 			_spriteBatch.Begin();
 
 			// Draw the background to the whole window.
-			// TODO - draw the background to the whole window using the screen size variable
+			// Draw the background to the whole window using the screen size variable
+			_spriteBatch.Draw(_backTxr, new Rectangle(0, 0, _screenSize.X, _screenSize.Y), Color.White);
 
 			// We want to execute the Draw function on every cell.
 			// First we loop through the rows in the y axis...
